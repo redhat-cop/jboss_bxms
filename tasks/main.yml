@@ -1,0 +1,72 @@
+---
+- name: Set BPM Suite Artifact Facts
+  set_fact:
+    jboss_bxms_artifact_tmp_dest: "{{ '/tmp/' + jboss_bxms_artifact_name }}"
+    jboss_bxms_business_central_location: "{{ jboss_bxms_deployment_directory + '/business-central.war' }}"
+    jboss_bxms_dashbuilder_location: "{{ jboss_bxms_deployment_directory + '/dashbuilder.war' }}"
+    jboss_bxms_kie_server_location: "{{ jboss_bxms_deployment_directory + '/kie-server.war' }}"
+
+- name: Copy JBoss BxMS
+  copy:
+    src: "{{ jboss_bxms_artifact_name }}"
+    dest: "{{ jboss_bxms_artifact_tmp_dest }}"
+
+## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
+- name: Stop jboss-as Service
+  service:
+    name: jboss-as-standalone.service
+    state: stopped
+
+# For EAP, this should overlay the BPM download over EAP, intentionally overwriting some files in the process
+- name: Extract BPM Suite
+  unarchive:
+    src: "{{ jboss_bxms_artifact_tmp_dest }}"
+    dest: "{{ jboss_bxms_artifact_dest }}"
+    copy: no
+    owner: "{{ jboss_bxms_service_user }}"
+    group: "{{ jboss_bxms_service_group }}"
+
+- name: Remove Business Central WAR
+  file:
+    state: absent
+    path: "{{ jboss_bxms_business_central_location }}"
+  when: jboss_bxms_deploy_business_central == false
+
+- name: Remove Business Central Deployment Marker
+  file:
+    state: absent
+    path: "{{ jboss_bxms_business_central_location + '.dodeploy' }}"
+  when: jboss_bxms_deploy_business_central == false
+
+- name: Remove Dashbuilder WAR
+  file:
+    state: absent
+    path: "{{ jboss_bxms_dashbuilder_location }}"
+  when: jboss_bxms_deploy_dashbuilder == false
+
+- name: Remove Dashbuilder Deployment Marker
+  file:
+    state: absent
+    path: "{{ jboss_bxms_dashbuilder_location + '.dodeploy' }}"
+  when: jboss_bxms_deploy_dashbuilder == false
+
+- name: Remove KIE Server WAR
+  file:
+    state: absent
+    path: "{{ jboss_bxms_kie_server_location }}"
+  when: jboss_bxms_deploy_kie_server == false
+
+- name: Remove KIE Server Deployment Marker
+  file:
+    state: absent
+    path: "{{ jboss_bxms_kie_server_location + '.dodeploy' }}"
+  when: jboss_bxms_deploy_kie_server == false
+
+- include: java_opts.yml
+
+## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
+- name: Start and Enable jboss-as Service
+  service:
+    name: jboss-as-standalone.service
+    state: started
+    enabled: yes
