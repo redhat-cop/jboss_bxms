@@ -1,6 +1,6 @@
 ---
-jboss_bxms_artifact_source: # TODO
-jboss_bxms_artifact_name: jboss-bpmsuite-6.2.2.GA-redhat-1-deployable-eap6.x.zip
+jboss_bxms_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDetail.html?softwareId=43731
+jboss_bxms_artifact_name: jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip
 
 # This is default set to EAP values, but will need to be configurable for each container
 jboss_bxms_artifact_dest: /opt/jboss-as
@@ -13,10 +13,10 @@ jboss_bxms_expose_git_daemon: true
 jboss_bxms_expose_ssh_daemon: true
 
 jboss_bxms_deploy_kie_server: true
-jboss_bxms_deploy_dashbuilder: false
-jboss_bxms_deploy_business_central: false
+jboss_bxms_deploy_dashbuilder: true
+jboss_bxms_deploy_business_central: true
 
 jboss_bxms_service_user: jboss-as
 jboss_bxms_service_group: jboss-as
 # ussually this is set at the playbook level
-#transfer_method: # csp-to-host | copy-from-contoller
+#transfer_method: # csp-to-host | copy-from-controller

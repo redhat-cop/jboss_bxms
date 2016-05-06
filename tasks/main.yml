@@ -10,6 +10,26 @@
   copy:
     src: "{{ jboss_bxms_artifact_name }}"
     dest: "{{ jboss_bxms_artifact_tmp_dest }}"
+  when: transfer_method == 'copy-from-controller'
+
+- name: Async Download JBoss BxMS from Red Hat Customer Portal
+  redhat_csp_download:
+    url: "{{ jboss_bxms_artifact_source }}"
+    dest: "{{ jboss_bxms_artifact_tmp_dest }}"
+    username: "{{ rhn_username }}"
+    password: "{{ rhn_password }}"
+  async: 7200
+  poll: 0
+  register: jboss_bxms_download
+  when: transfer_method == 'csp-to-host'
+
+- name: 'Check On JBoss BxMS Download Completion'
+  async_status: jid={{ jboss_bxms_download.ansible_job_id }}
+  register: job_result3
+  until: job_result3.finished
+  retries: 600
+  delay: 10
+  when: transfer_method == 'csp-to-host'
 
 ## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
 - name: Stop jboss-as Service
