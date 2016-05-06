@@ -1,5 +1,5 @@
 ---
-jboss_bxms_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDetail.html?softwareId=43731
+jboss_bxms_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=43731&product=bpm.suite
 jboss_bxms_artifact_name: jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip
 
 # This is default set to EAP values, but will need to be configurable for each container

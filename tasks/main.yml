@@ -42,6 +42,7 @@
 
 # For EAP, this should overlay the BPM download over EAP, intentionally overwriting some files in the process
 - name: Extract BPM Suite
+  sudo: true
   unarchive:
     src: "{{ jboss_bxms_artifact_tmp_dest }}"
     dest: "{{ jboss_bxms_artifact_dest }}"
