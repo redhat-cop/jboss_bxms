@@ -6,6 +6,7 @@ jboss_bxms_artifact_name: jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip
 jboss_bxms_artifact_dest: /opt/jboss-as
 
 jboss_bxms_deployment_directory: /opt/jboss-as/jboss-eap-6.4/standalone/deployments
+jboss_bxms_eap_config_directory: /opt/jboss-as/jboss-eap-6.4/standalone/configuration
 
 eap_runtime_conf_file: /opt/jboss-as/jboss-eap-6.4/bin/standalone.conf
 
@@ -15,6 +16,8 @@ jboss_bxms_expose_ssh_daemon: true
 jboss_bxms_deploy_kie_server: true
 jboss_bxms_deploy_dashbuilder: true
 jboss_bxms_deploy_business_central: true
+
+jboss_bxms_create_default_eap_user: true
 
 jboss_bxms_service_user: jboss-as
 jboss_bxms_service_group: jboss-as

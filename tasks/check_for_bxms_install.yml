@@ -1,0 +1,33 @@
+---
+- name: Set BxMS Exists Fact Default to False
+  set_fact:
+    jboss_bxms_exists: false
+
+- name: Check For Existence of Business Central
+  sudo: true
+  stat:
+    path: "{{ jboss_bxms_business_central_location }}"
+  register: jboss_bxms_business_central_exists
+  tags:
+    - jboss_eap
+
+- name: Check For Existence of KIE Server
+  sudo: true
+  stat:
+    path: "{{ jboss_bxms_kie_server_location }}"
+  register: jboss_bxms_kie_server_exists
+  tags:
+    - jboss_eap
+
+- name: Check For Existence of Dashbuilder
+  sudo: true
+  stat:
+    path: "{{ jboss_bxms_dashbuilder_location }}"
+  register: jboss_bxms_dashbuilder_exists
+  tags:
+    - jboss_eap
+
+- name: Set BxMS Exists Fact to True
+  set_fact:
+    jboss_bxms_exists: true
+  when: jboss_bxms_business_central_exists == true or jboss_bxms_kie_server_exists == true or jboss_bxms_dashbuilder_exists == true

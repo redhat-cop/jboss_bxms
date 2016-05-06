@@ -6,11 +6,13 @@
     jboss_bxms_dashbuilder_location: "{{ jboss_bxms_deployment_directory + '/dashbuilder.war' }}"
     jboss_bxms_kie_server_location: "{{ jboss_bxms_deployment_directory + '/kie-server.war' }}"
 
+- include: check_for_bxms_install.yml
+
 - name: Copy JBoss BxMS
   copy:
     src: "{{ jboss_bxms_artifact_name }}"
     dest: "{{ jboss_bxms_artifact_tmp_dest }}"
-  when: transfer_method == 'copy-from-controller'
+  when: transfer_method == 'copy-from-controller' and jboss_bxms_exists == false
 
 - name: Async Download JBoss BxMS from Red Hat Customer Portal
   redhat_csp_download:
@@ -21,7 +23,7 @@
   async: 7200
   poll: 0
   register: jboss_bxms_download
-  when: transfer_method == 'csp-to-host'
+  when: transfer_method == 'csp-to-host' and jboss_bxms_exists == false
 
 - name: 'Check On JBoss BxMS Download Completion'
   async_status: jid={{ jboss_bxms_download.ansible_job_id }}
@@ -29,13 +31,14 @@
   until: job_result3.finished
   retries: 600
   delay: 10
-  when: transfer_method == 'csp-to-host'
+  when: transfer_method == 'csp-to-host' and jboss_bxms_exists == false
 
 ## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
 - name: Stop jboss-as Service
   service:
     name: jboss-as-standalone.service
     state: stopped
+  when: jboss_bxms_exists == false
 
 # For EAP, this should overlay the BPM download over EAP, intentionally overwriting some files in the process
 - name: Extract BPM Suite
@@ -45,6 +48,7 @@
     copy: no
     owner: "{{ jboss_bxms_service_user }}"
     group: "{{ jboss_bxms_service_group }}"
+  when: jboss_bxms_exists == false
 
 - name: Remove Business Central WAR
   file:
@@ -82,6 +86,8 @@
     path: "{{ jboss_bxms_kie_server_location + '.dodeploy' }}"
   when: jboss_bxms_deploy_kie_server == false
 
+- include: configuration_files.yml
+
 - include: java_opts.yml
 
 ## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
@@ -90,3 +96,4 @@
     name: jboss-as-standalone.service
     state: started
     enabled: yes
+  when: jboss_bxms_exists == false
