@@ -8,7 +8,6 @@ Transfer Method
 
 This role supports a few different mechanism for transferring the product zip files to the target host. These are documented on [the main playbooks README](https://github.com/rhtconsulting/ansible-middleware-playbooks), as the methods are supported across a variety of roles.
 
-
 Dependencies
 ------------
 
@@ -16,6 +15,11 @@ Dependencies
 - unzip
 
 Our playbooks provide these dependencies in a [common role](https://github.com/rhtconsulting/ansible-middleware-playbooks/tree/master/roles/common), but this there is no explicitly ansible dependency to allow end users more options.
+
+Default User
+------------
+
+A default user can be created for you by setting the variable `jboss_bxms_create_default_eap_user == true`. This will create user `jboss` with password `bpmsuite`. This only works for EAP for now. You can see the roles defined [here](files/application-roles.properties).
 
 License
 -------
