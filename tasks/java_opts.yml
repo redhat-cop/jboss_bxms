@@ -1,0 +1,20 @@
+---
+# https://access.redhat.com/solutions/34626
+- name: Change Default Random Number Generator
+  lineinfile:
+    dest: "{{ eap_runtime_conf_file }}"
+    line: JAVA_OPTS="$JAVA_OPTS  -Djava.security.egd=file:/dev/./urandom"
+
+- name: Create Local Maven Directory
+  sudo: true
+  file:
+    path: /opt/jboss-as/.m2
+    owner: "{{ jboss_bxms_service_user }}"
+    group: "{{ jboss_bxms_service_group }}"
+    state: directory
+    mode: "755"
+
+- name: Set Local Maven Directory
+  lineinfile:
+    dest: "{{ eap_runtime_conf_file }}"
+    line: JAVA_OPTS="$JAVA_OPTS -Dorg.guvnor.m2repo.dir=/opt/jboss-as/.m2"

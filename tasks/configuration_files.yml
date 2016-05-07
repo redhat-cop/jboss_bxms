@@ -1,0 +1,14 @@
+---
+- name: Copy Application User & Role Configuration Files
+  become: yes
+  become_user: "{{ jboss_bxms_service_user }}"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ jboss_bxms_eap_config_directory }}"
+    owner: "{{ jboss_bxms_service_user }}"
+    group: "{{ jboss_bxms_service_group }}"
+    mode: "755"
+  with_items:
+    - application-users.properties
+    - application-roles.properties
+  when: jboss_bxms_create_default_eap_user == true
