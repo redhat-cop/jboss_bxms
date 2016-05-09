@@ -19,7 +19,7 @@ Our playbooks provide these dependencies in a [common role](https://github.com/r
 Default User
 ------------
 
-A default user can be created for you by setting the variable `jboss_bxms_create_default_eap_user == true`. This will create user `jboss` with password `bpmsuite`. This only works for EAP for now. You can see the roles defined [here](files/application-roles.properties).
+A default user can be created for you by setting the variable `jboss_bxms_create_default_eap_user == true`. This will create user `jboss` with password `bpmsuite1!`. This only works for EAP for now. You can see the roles defined [here](files/application-roles.properties).
 
 License
 -------
