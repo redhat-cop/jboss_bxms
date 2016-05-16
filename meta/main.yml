@@ -16,4 +16,4 @@ galaxy_info:
    - brms
    - bpms
    - bxms
-  dependencies: []
+dependencies: []
