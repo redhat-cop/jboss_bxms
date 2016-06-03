@@ -4,11 +4,12 @@ galaxy_info:
   description: Role to install JBoss BRMS or BPM Suite
   company: Red Hat
   license: license (Apache)
-  min_ansible_version: 1.8
+  min_ansible_version: 2.0.2.0
   platforms:
    - name: EL
      versions:
      - 7
+     - 6
   categories:
    - java
    - jboss

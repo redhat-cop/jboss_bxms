@@ -1,6 +1,5 @@
 ---
 - name: Copy Application User & Role Configuration Files
-  become: yes
   become_user: "{{ jboss_bxms_service_user }}"
   copy:
     src: "{{ item }}"

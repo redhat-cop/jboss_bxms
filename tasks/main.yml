@@ -33,16 +33,24 @@
   delay: 10
   when: transfer_method == 'csp-to-host' and jboss_bxms_exists == false
 
-## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
-- name: Stop jboss-as Service
-  service:
-    name: jboss-as-standalone.service
-    state: stopped
-  when: jboss_bxms_exists == false
+# This is a hack for service naming differences in RHEL 6 vs 7
+- block:
+  - name: Stop BxMS Service
+    service:
+      name: "{{ jboss_bxms_service_name }}"
+      state: stopped
+    when: jboss_bxms_exists == false
+
+  rescue:
+  - name: Stop BxMS Service With .sh
+    service:
+      name: "{{ jboss_bxms_service_name }}.sh"
+      state: stopped
+    when: jboss_bxms_exists == false
 
 # For EAP, this should overlay the BPM download over EAP, intentionally overwriting some files in the process
 - name: Extract BPM Suite
-  sudo: true
+  become: true
   unarchive:
     src: "{{ jboss_bxms_artifact_tmp_dest }}"
     dest: "{{ jboss_bxms_artifact_dest }}"
@@ -90,11 +98,3 @@
 - include: configuration_files.yml
 
 - include: java_opts.yml
-
-## We need to abstract this out somehow, as it will be different per container. Handlers don't seem to be the right way
-- name: Start and Enable jboss-as Service
-  service:
-    name: jboss-as-standalone.service
-    state: started
-    enabled: yes
-  when: jboss_bxms_exists == false
