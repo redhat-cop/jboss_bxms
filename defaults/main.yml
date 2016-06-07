@@ -21,5 +21,6 @@ jboss_bxms_create_default_eap_user: true
 
 jboss_bxms_service_user: jboss-as
 jboss_bxms_service_group: jboss-as
+jboss_bxms_service_name: jboss-as-standalone
 # ussually this is set at the playbook level
 #transfer_method: # csp-to-host | copy-from-controller

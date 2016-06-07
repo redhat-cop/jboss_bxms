@@ -1,0 +1,34 @@
+sudo: required
+language: python
+python:
+  - "2.7"
+
+cache: pip
+
+env:
+  global:
+    - ANSIBLE_HOST_KEY_CHECKING=False
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-engine
+
+install:
+  - sudo -H pip install ansible==2.0.2.0
+  - sudo -H pip install docker-py
+  - sudo -H pip install six --upgrade
+  - sudo apt-get install -y sshpass
+  - ansible-galaxy install -r tests/requirements.yml -p tests/roles
+  - wget http://files.justinholmes.co/jboss-eap-6.4.0.zip -P tests/roles/jboss_eap/files
+  - wget http://files.justinholmes.co/jboss-eap-6.4.7-patch.zip -P tests/roles/jboss_eap/files
+  - wget http://files.justinholmes.co/jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip -P files
+
+services:
+  - docker
+
+script:
+  - ansible-playbook -i tests/inventory tests/syntax-check.yml --syntax-check
+  - ansible-playbook -i tests/inventory  tests/docker-centos-bxms-copy.yml
+
+notifications:
+  slack: redhat:GhPEcNzYddt4Pf9OJW2wcyCK

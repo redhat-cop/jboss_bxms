@@ -4,7 +4,7 @@
     jboss_bxms_exists: false
 
 - name: Check For Existence of Business Central
-  sudo: true
+  become: true
   stat:
     path: "{{ jboss_bxms_business_central_location }}"
   register: jboss_bxms_business_central_exists
@@ -12,7 +12,7 @@
     - jboss_eap
 
 - name: Check For Existence of KIE Server
-  sudo: true
+  become: true
   stat:
     path: "{{ jboss_bxms_kie_server_location }}"
   register: jboss_bxms_kie_server_exists
@@ -20,7 +20,7 @@
     - jboss_eap
 
 - name: Check For Existence of Dashbuilder
-  sudo: true
+  become: true
   stat:
     path: "{{ jboss_bxms_dashbuilder_location }}"
   register: jboss_bxms_dashbuilder_exists

@@ -1,4 +1,4 @@
-Ansible JBoss BxMS Role
+Ansible JBoss BxMS Role  [![Build Status](https://travis-ci.org/rhtconsulting/jboss_bxms.svg)](https://travis-ci.org/rhtconsulting/jboss_bxms)
 =================
 
 A role to install JBoss BRMS or BPM Suite on RHEL7. Intended to be used with [JBoss Middleware Playbooks](https://github.com/rhtconsulting/ansible-middleware-playbooks)

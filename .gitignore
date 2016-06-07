@@ -1,1 +1,6 @@
-*.zip
+*.zip*
+*.jar
+tests/roles/jboss_common
+tests/roles/jboss_eap
+tests/roles/provision_docker
+tests/roles/redhat-csp-download

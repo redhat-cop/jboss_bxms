@@ -6,7 +6,7 @@
     line: JAVA_OPTS="$JAVA_OPTS  -Djava.security.egd=file:/dev/./urandom"
 
 - name: Create Local Maven Directory
-  sudo: true
+  become: true
   file:
     path: /opt/jboss-as/.m2
     owner: "{{ jboss_bxms_service_user }}"

@@ -1,0 +1,8 @@
+localhost ansible_connection=local
+
+[jboss_eap_centos_hosts]
+127.0.0.1 ansible_ssh_user=vagrant ansible_ssh_port=2200
+
+[docker_containers]
+#172.17.0.2 ansible_ssh_user=root ansible_ssh_pass=docker.io
+#172.17.0.3 ansible_ssh_user=root ansible_ssh_pass=docker.io
