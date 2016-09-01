@@ -14,7 +14,7 @@ before_install:
   - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-engine
 
 install:
-  - sudo -H pip install ansible==2.0.2.0
+  - sudo -H pip install ansible==2.1.1.0
   - sudo -H pip install docker-py
   - sudo -H pip install six --upgrade
   - sudo apt-get install -y sshpass
