@@ -1,14 +1,14 @@
 ---
-jboss_bxms_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=43731&product=bpm.suite
-jboss_bxms_artifact_name: jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip
+jboss_bxms_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=48441
+jboss_bxms_artifact_name: jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip
 
 # This is default set to EAP values, but will need to be configurable for each container
 jboss_bxms_artifact_dest: /opt/jboss-as
 
-jboss_bxms_deployment_directory: /opt/jboss-as/jboss-eap-6.4/standalone/deployments
-jboss_bxms_eap_config_directory: /opt/jboss-as/jboss-eap-6.4/standalone/configuration
+jboss_bxms_deployment_directory: /opt/jboss-as/jboss-eap-7.0/standalone/deployments
+jboss_bxms_eap_config_directory: /opt/jboss-as/jboss-eap-7.0/standalone/configuration
 
-eap_runtime_conf_file: /opt/jboss-as/jboss-eap-6.4/bin/standalone.conf
+eap_runtime_conf_file: /opt/jboss-as/jboss-eap-7.0/bin/standalone.conf
 
 jboss_bxms_expose_git_daemon: true
 jboss_bxms_expose_ssh_daemon: true
