@@ -24,7 +24,7 @@ jboss_bxms_deploy_kie_server: true
 jboss_bxms_deploy_dashbuilder: true
 jboss_bxms_deploy_business_central: true
 
-jboss_bxms_apply_patch: true
+jboss_bxms_apply_patch: false
 
 jboss_bxms_create_default_eap_user: true
 

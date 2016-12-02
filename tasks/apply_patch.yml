@@ -76,7 +76,7 @@
     group: "{{ jboss_bxms_service_group }}"
   tags:
     - jboss_bxms_patch
-  when: jboss_bxms_exists.stat.exists == false
+  when: jboss_bxms_apply_patch == true
 
 # Patches can be applied while EAP is running
 - name: Apply JBoss BxMS Patch
