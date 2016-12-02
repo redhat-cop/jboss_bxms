@@ -5,6 +5,7 @@ jboss_bxms_artifact_name: jboss-bpmsuite-6.4.0.GA-deployable-eap7.x.zip
 # This is default set to EAP values, but will need to be configurable for each container
 jboss_bxms_artifact_dest: /opt/jboss-as
 
+jboss_bxms_eap_directory: /opt/jboss-as/jboss-eap-7.0
 jboss_bxms_deployment_directory: /opt/jboss-as/jboss-eap-7.0/standalone/deployments
 jboss_bxms_eap_config_directory: /opt/jboss-as/jboss-eap-7.0/standalone/configuration
 jboss_bxms_business_central_lib_directory: /opt/jboss-as/jboss-eap-7.0/standalone/deployments/business-central.war/WEB-INF/lib

@@ -6,17 +6,7 @@
     jboss_bxms_patch_artifact_url: "{{ jboss_bxms_patch_artifact_source }}"
     jboss_bxms_patch_dest: "/tmp/{{ jboss_bxms_patch_artifact_name }}"
   tags:
-    - jboss_eap
-
-# Currently we only support patching from base (e.g. 6.x.0), not incremental minor release patches as the role is for initial install
-- name: Determine if the Patch Can Be Applied
-  become_user: "{{ jboss_bxms_service_user }}"
-  command: "{{ jboss_eap_home }}/bin/jboss-cli.sh 'patch info --verbose'"
-  register: patch_info_result
-  tags:
-    - jboss_eap
-    - dev
-  when: jboss_bxms_apply_patch == true and jboss_bxms_exists.stat.exists == true
+    - jboss_bxms_patch
 
 
 #### Download and install base library and patch
@@ -30,8 +20,8 @@
   poll: 0
   register: url_jboss_bxms_patch_download
   tags:
-    - jboss_eap
-  when: transfer_method == 'url' and jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+    - jboss_bxms_patch
+  when: transfer_method == 'url' and jboss_bxms_apply_patch == true
 
 - name: Check On JBoss BxMS Patch Download Completion (URL)
   async_status: jid={{ url_jboss_bxms_patch_download.ansible_job_id }}
@@ -40,8 +30,8 @@
   retries: 600
   delay: 10
   tags:
-    - jboss_eap
-  when: transfer_method == 'url' and jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+    - jboss_bxms_patch
+  when: transfer_method == 'url' and jboss_bxms_apply_patch == true
 
 - name: Async Download JBoss BxMS Patch from Red Hat Customer Portal
   redhat_csp_download:
@@ -53,8 +43,8 @@
   poll: 0
   register: csp_jboss_bxms_patch_download
   tags:
-    - jboss_eap
-  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+    - jboss_bxms_patch
+  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true
 
 - name: Check On JBoss BxMS Patch Download Completion (CSP)
   async_status: jid={{ csp_jboss_bxms_patch_download.ansible_job_id }}
@@ -63,8 +53,8 @@
   retries: 600
   delay: 10
   tags:
-    - jboss_eap
-  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+    - jboss_bxms_patch
+  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true
   ignore_errors: yes
 
 - name: Copy JBoss BxMS Patch
@@ -72,17 +62,30 @@
     src: "{{ jboss_bxms_patch_artifact_name }}"
     dest: "{{ jboss_bxms_patch_dest }}"
   tags:
-    - jboss_eap
-  when: transfer_method == 'copy-from-controller' and jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+    - jboss_bxms_patch
+  when: transfer_method == 'copy-from-controller' and jboss_bxms_apply_patch == true
+
+- name: Extract JBoss BxMS Patch Libraries
+  become: true
+  unarchive:
+    src: "{{ jboss_bxms_patch_artifact_name }}"
+    dest: "{{ jboss_bxms_patch_dest }}"
+    creates: jboss-eap-7.0
+    copy: no
+    owner: "{{ jboss_bxms_service_user }}"
+    group: "{{ jboss_bxms_service_group }}"
+  tags:
+    - jboss_bxms_patch
+  when: jboss_bxms_exists.stat.exists == false
 
 # Patches can be applied while EAP is running
 - name: Apply JBoss BxMS Patch
   become_user: "{{ jboss_bxms_service_user }}"
-  command: "{{ jboss_eap_home }}/bin/jboss-cli.sh 'patch apply {{ jboss_eap_patch_dest }} --verbose'"
+  command: "./{{ jboss_bxms_patch_dest }}/apply-updates.sh {{ jboss_bxms_eap_directory }} eap-7.x"
   notify:
     - Restart jboss-as Service
     - Verify jboss-as is running
   tags:
-    - jboss_eap
+    - jboss_bxms_patch
     - dev
-  when: jboss_bxms_apply_patch == true and (jboss_bxms_exists.stat.exists == false or 'base' in patch_info_result.stdout)
+  when: jboss_bxms_apply_patch == true
