@@ -7,6 +7,12 @@ jboss_bxms_artifact_dest: /opt/jboss-as
 
 jboss_bxms_deployment_directory: /opt/jboss-as/jboss-eap-7.0/standalone/deployments
 jboss_bxms_eap_config_directory: /opt/jboss-as/jboss-eap-7.0/standalone/configuration
+jboss_bxms_business_central_lib_directory: /opt/jboss-as/jboss-eap-7.0/standalone/deployments/business-central.war/WEB-INF/lib
+
+jboss_bxms_workbench_file: /opt/jboss-as/jboss-eap-7.0/standalone/deployments/business-central.war/WEB-INF/classes/workbench-policy.properties
+jboss_bxms_web_file: /opt/jboss-as/jboss-eap-7.0/standalone/deployments/business-central.war/WEB-INF/web.xml
+
+jboss_bxms_standalone_config_file: /opt/jboss-as/jboss-eap-7.0/standalone/configuration/standalone.xml
 
 eap_runtime_conf_file: /opt/jboss-as/jboss-eap-7.0/bin/standalone.conf
 
@@ -17,10 +23,10 @@ jboss_bxms_deploy_kie_server: true
 jboss_bxms_deploy_dashbuilder: true
 jboss_bxms_deploy_business_central: true
 
+jboss_bxms_apply_patch: true
+
 jboss_bxms_create_default_eap_user: true
 
 jboss_bxms_service_user: jboss-as
 jboss_bxms_service_group: jboss-as
 jboss_bxms_service_name: jboss-as-standalone
-# ussually this is set at the playbook level
-#transfer_method: # csp-to-host | copy-from-controller
