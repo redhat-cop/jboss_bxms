@@ -11,24 +11,20 @@ env:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y -o Dpkg::Options::="--force-confnew" docker-engine
 
 install:
-  - sudo -H pip install ansible==2.1.1.0
+  - sudo -H pip install ansible==2.4
   - sudo -H pip install docker-py
   - sudo -H pip install six --upgrade
   - sudo apt-get install -y sshpass
   - ansible-galaxy install -r tests/requirements.yml -p tests/roles
-  - wget https://storage.googleapis.com/red-hat-bits/jboss-eap-6.4.0.zip -P tests/roles/jboss_eap/files
-  - wget https://storage.googleapis.com/red-hat-bits/jboss-eap-6.4.7-patch.zip -P tests/roles/jboss_eap/files
-  - wget https://storage.googleapis.com/red-hat-bits/jboss-bpmsuite-6.3.0.GA-deployable-eap6.x.zip -P files
 
 services:
   - docker
 
 script:
   - ansible-playbook -i tests/inventory tests/syntax-check.yml --syntax-check
-  - ansible-playbook -i tests/inventory  tests/docker-centos-bxms-copy.yml
+#  - ansible-playbook -i tests/inventory  tests/docker-centos-bxms-copy.yml
 
 notifications:
   slack: redhat:GhPEcNzYddt4Pf9OJW2wcyCK
