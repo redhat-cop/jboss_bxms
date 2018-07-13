@@ -1,0 +1,16 @@
+---
+- name: Change Role in Workbench-Policy file
+  become_user: "{{ jboss_bxms_service_user }}"
+  lineinfile:
+    dest: "{{ jboss_bxms_workbench_file }}"
+    regexp: "^roles(.*){{ role_to_change }}$"
+    line: "roles\\1{{ new_role }}"
+    backup: yes
+    backrefs: yes
+
+- name: Change Role in Web XML file
+  become_user: "{{ jboss_bxms_service_user }}"
+  replace:
+    dest: "{{ jboss_bxms_web_file }}"
+    regexp: "<role-name>{{ role_to_change }}</role-name>"
+    replace: "<role-name>{{ new_role }}</role-name>"

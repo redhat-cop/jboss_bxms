@@ -1,0 +1,91 @@
+---
+#### Set Facts
+- name: Set JBoss BxMS Patch Download Facts
+  set_fact:
+    jboss_bxms_patch_artifact_source: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=47721
+    jboss_bxms_patch_artifact_url: "{{ jboss_bxms_patch_artifact_source }}"
+    jboss_bxms_patch_dest: "/tmp/{{ jboss_bxms_patch_artifact_name }}"
+  tags:
+    - jboss_bxms_patch
+
+
+#### Download and install base library and patch
+- name: Async Download JBoss BxMS Patch by URL (HTTP/HTTPS/FTP)
+  get_url:
+    url: "{{ jboss_bxms_patch_artifact_url }}"
+    dest: "{{ jboss_bxms_patch_dest }}"
+    url_username: "{{ url_username | default(None) }}"
+    url_password: "{{ url_password | default(None) }}"
+  async: 7200
+  poll: 0
+  register: url_jboss_bxms_patch_download
+  tags:
+    - jboss_bxms_patch
+  when: transfer_method == 'url' and jboss_bxms_apply_patch == true
+
+- name: Check On JBoss BxMS Patch Download Completion (URL)
+  async_status: jid={{ url_jboss_bxms_patch_download.ansible_job_id }}
+  register: job_result2
+  until: job_result2.finished
+  retries: 600
+  delay: 10
+  tags:
+    - jboss_bxms_patch
+  when: transfer_method == 'url' and jboss_bxms_apply_patch == true
+
+- name: Async Download JBoss BxMS Patch from Red Hat Customer Portal
+  redhat_csp_download:
+    url: "{{ jboss_bxms_patch_artifact_url }}"
+    dest: "{{ jboss_bxms_patch_dest }}"
+    username: "{{ rhn_username }}"
+    password: "{{ rhn_password }}"
+  async: 7200
+  poll: 0
+  register: csp_jboss_bxms_patch_download
+  tags:
+    - jboss_bxms_patch
+  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true
+
+- name: Check On JBoss BxMS Patch Download Completion (CSP)
+  async_status: jid={{ csp_jboss_bxms_patch_download.ansible_job_id }}
+  register: job_result2
+  until: job_result2.finished
+  retries: 600
+  delay: 10
+  tags:
+    - jboss_bxms_patch
+  when: transfer_method == 'csp-to-host' and jboss_bxms_apply_patch == true
+  ignore_errors: yes
+
+- name: Copy JBoss BxMS Patch
+  copy:
+    src: "{{ jboss_bxms_patch_artifact_name }}"
+    dest: "{{ jboss_bxms_patch_dest }}"
+  tags:
+    - jboss_bxms_patch
+  when: transfer_method == 'copy-from-controller' and jboss_bxms_apply_patch == true
+
+- name: Extract JBoss BxMS Patch Libraries
+  become: true
+  unarchive:
+    src: "{{ jboss_bxms_patch_artifact_name }}"
+    dest: "{{ jboss_bxms_patch_dest }}"
+    creates: jboss-eap-7.0
+    copy: no
+    owner: "{{ jboss_bxms_service_user }}"
+    group: "{{ jboss_bxms_service_group }}"
+  tags:
+    - jboss_bxms_patch
+  when: jboss_bxms_apply_patch == true
+
+# Patches can be applied while EAP is running
+- name: Apply JBoss BxMS Patch
+  become_user: "{{ jboss_bxms_service_user }}"
+  command: "./{{ jboss_bxms_patch_dest }}/apply-updates.sh {{ jboss_bxms_eap_directory }} eap-7.x"
+  notify:
+    - Restart jboss-as Service
+    - Verify jboss-as is running
+  tags:
+    - jboss_bxms_patch
+    - dev
+  when: jboss_bxms_apply_patch == true

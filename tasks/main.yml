@@ -32,6 +32,7 @@
   retries: 600
   delay: 10
   when: transfer_method == 'csp-to-host' and jboss_bxms_exists == false
+  ignore_errors: yes
 
 # This is a hack for service naming differences in RHEL 6 vs 7
 - block:
@@ -98,3 +99,7 @@
 - include: configuration_files.yml
 
 - include: java_opts.yml
+
+- include: configure_roles.yml
+
+- include: install_login_module.yml

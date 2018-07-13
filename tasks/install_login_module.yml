@@ -1,0 +1,14 @@
+---
+- name: Copy Custom Login Module to Business Central lib
+  become_user: "{{ jboss_bxms_service_user }}"
+  copy:
+    src: files/CustomLoginModule.jar
+    dest: "{{ jboss_bxms_business_central_lib_directory }}"
+    force: yes
+
+- name: Change Business Central security domain
+  become_user: "{{ jboss_bxms_service_user }}"
+  replace:
+    dest: "{{ jboss_bxms_standalone_config_file }}"
+    regexp: "<login-module code=\"Remoting\" flag=\"optional\">.*\n.*<module-option name=\"password-stacking\" value=\"useFirstPass\"/>.*\n.*</login-module>.*\n.*<login-module code=\"RealmDirect\" flag=\"required\">.*\n.*<module-option name=\"password-stacking\" value=\"useFirstPass\"/>.*\n.*</login-module>"
+    replace: "<login-module code=\"custom.CustomLoginModule\" flag=\"optional\"/>"
