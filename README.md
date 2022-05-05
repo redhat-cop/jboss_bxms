@@ -1,3 +1,7 @@
+# DEPRECATED - This repository is no longer maintained
+
+**Capabilities provided by this repository have migrated to the [ansible-middleware](https://github.com/ansible-middleware) project.**
+
 Ansible JBoss BxMS Role  [![Build Status](https://travis-ci.org/redhat-cop/jboss_bxms.svg)](https://travis-ci.org/redhat-cop/jboss_bxms)
 =================
 
@@ -29,6 +33,6 @@ License
 Authors Information
 ------------------
 
-* [Andrew Block](https://github.com/sabre1041)
-* [Justin Holmes](https://github.com/sherl0cks)
-* [Kamesh Sampath](https://github.com/kameshsampath)
+- [Andrew Block](https://github.com/sabre1041)
+- [Justin Holmes](https://github.com/sherl0cks)
+- [Kamesh Sampath](https://github.com/kameshsampath)
